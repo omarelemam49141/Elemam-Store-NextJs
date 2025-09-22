@@ -1,0 +1,5 @@
+import { env } from "process";
+
+export const APP_NAME = env.APP_NAME || "Elemam Store";
+export const APP_DESCRIPTION = env.APP_DESCRIPTION || "Elemam Store";
+export const SERVER_URL = env.SERVER_URL!;
