@@ -1,10 +1,6 @@
 import { APP_NAME } from "@/lib/constants";
 import Image from "next/image";
-import { BaggageClaim } from "lucide-react";
-import { User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import ThemeToggler from "./theme-toggler/theme.toggler";
+import NavBarMenu from "./navbar-menu";
 
 export default function Header() {
   return (
@@ -24,21 +20,7 @@ export default function Header() {
           </div>
 
           <div className="flex gap-4">
-            <ThemeToggler />
-
-            <Button variant="ghost" asChild className="cart nav-item flex">
-              <Link href="/cart">
-                <BaggageClaim />
-                <span>Cart</span>
-              </Link>
-            </Button>
-
-            <Button asChild className="cart nav-item flex">
-              <Link href="/login">
-                <User />
-                <span>Sign In</span>
-              </Link>
-            </Button>
+            <NavBarMenu />
           </div>
         </div>
       </nav>
