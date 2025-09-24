@@ -1,12 +1,14 @@
-import { Button } from "@/components/ui/button";
+import ProductsList from "@/components/features/products/products-list";
+import sampleData from "../../../db/sample-data";
 
 export default async function Home() {
   return (
     <>
-      Omar Elemam{" "}
-      <Button variant="default" size="lg">
-        Click me
-      </Button>
+      <ProductsList
+        data={sampleData.products}
+        limit={6}
+        title="Newest Arrival"
+      />
     </>
   );
 }
