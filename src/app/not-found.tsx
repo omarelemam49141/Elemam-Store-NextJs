@@ -11,6 +11,7 @@ const NotFound = () => {
         alt={APP_NAME + " logo"}
         height={70}
         width={70}
+        priority
       ></Image>
 
       <div className="shadow-lg p-5 flex-center flex-col gap-4 rounded-md border-0">
