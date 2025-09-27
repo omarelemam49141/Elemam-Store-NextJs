@@ -1,14 +1,18 @@
-import { PrismaClient, Product } from "@/generated/prisma";
-import { neonConfig } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import ws from "ws";
+import { PrismaClient } from "@/generated/prisma";
 
-neonConfig.webSocketConstructor = ws;
-const connectionString = `${process.env.DATABASE_URL}`;
+// Global variable to cache the Prisma client
+declare global {
+  // eslint-disable-next-line no-var
+  var __prisma: ReturnType<typeof createPrismaClient> | undefined;
+}
 
-const adapter = new PrismaNeon({ connectionString });
-
-export const prisma = new PrismaClient({ adapter }).$extends({
+// Create a single instance of Prisma Client for serverless functions
+const createPrismaClient = () => {
+  // For Vercel deployment, use the standard Prisma client without Neon adapter
+  // The Neon adapter with WebSockets doesn't work well in serverless environments
+  return new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  }).$extends({
   result: {
     product: {
       price: {
@@ -36,3 +40,12 @@ export const prisma = new PrismaClient({ adapter }).$extends({
     },
   },
 });
+};
+
+// Use global variable to cache the Prisma client in development
+// This prevents multiple instances in serverless functions
+export const prisma = globalThis.__prisma ?? createPrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.__prisma = prisma;
+}

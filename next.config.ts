@@ -26,18 +26,34 @@ const nextConfig: NextConfig = {
       };
     }
     
-    // Add resolve restrictions
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-      crypto: false,
-      path: false,
-      os: false,
-    };
+    // Add resolve restrictions for client-side
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
+        path: false,
+        os: false,
+        ws: false,
+      };
+    }
+    
+    // Handle WebSocket library for server-side
+    if (isServer) {
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push('ws');
+      }
+    }
     
     return config;
+  },
+  
+  // Experimental features for better serverless support
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client', '@prisma/adapter-neon'],
   },
 };
 

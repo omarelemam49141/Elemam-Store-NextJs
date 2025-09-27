@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "src/app/**/*.tsx": {
+      "maxDuration": 30
+    },
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "PRISMA_GENERATE_SKIP_AUTOINSTALL": "true"
+  },
+  "build": {
+    "env": {
+      "PRISMA_GENERATE_SKIP_AUTOINSTALL": "true"
+    }
+  },
+  "installCommand": "npm ci && npx prisma generate"
+}
