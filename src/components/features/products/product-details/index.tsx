@@ -21,6 +21,7 @@ const ProductDetails = ({ product }: { product: GetProduct }) => {
               height={300}
               width={300}
               className="mx-auto"
+              priority
             ></Image>
           </Link>
         </CardHeader>

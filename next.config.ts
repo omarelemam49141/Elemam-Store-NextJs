@@ -11,17 +11,14 @@ const nextConfig: NextConfig = {
     if (dev) {
       config.watchOptions = {
         ignored: [
-          /node_modules/,
-          /\.git/,
-          /\.next/,
-          /Application Data/,
-          /AppData/,
-          /Program Files/,
-          /Windows/,
-          /Cookies/,
-          /C:\\Users\\.*\\Application Data/,
-          /C:\\Users\\.*\\AppData/,
-          /C:\\Users\\.*\\Cookies/
+          '**/node_modules/**',
+          '**/.git/**',
+          '**/.next/**',
+          '**/Application Data/**',
+          '**/AppData/**',
+          '**/Program Files/**',
+          '**/Windows/**',
+          '**/Cookies/**'
         ],
       };
     }
@@ -51,10 +48,8 @@ const nextConfig: NextConfig = {
     return config;
   },
   
-  // Experimental features for better serverless support
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', '@prisma/adapter-neon'],
-  },
+  // External packages for better serverless support
+  serverExternalPackages: ['@prisma/client'],
 };
 
 export default nextConfig;

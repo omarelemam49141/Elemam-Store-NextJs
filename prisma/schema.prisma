@@ -28,5 +28,60 @@ model Product {
   numReviews  Int
   isFeatured  Boolean  @default(false)
   banner      String?
-  createdAt   DateTime @db.Timestamp(6) @default(now())
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+}
+
+model User {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  email         String    @unique(map: "User_Email_idx")
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  PaymentMethod String?
+  role          String    @default("user")
+  address       Json      @db.Json
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @updatedAt @db.Timestamp(6)
+  accounts      Account[]
+  Session       Session[]
+  is_deleted    Boolean   @default(false)
+}
+
+model Account {
+  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String  @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  is_deleted        Boolean @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: NoAction)
+}
+
+model Session {
+  sessionToken String   @id
+  userId       String   @db.Uuid
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @db.Timestamp(6)
+}
+
+model VerificationToken {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  identifier String
+  token      String
+  expires    DateTime @db.Timestamp(6)
 }
