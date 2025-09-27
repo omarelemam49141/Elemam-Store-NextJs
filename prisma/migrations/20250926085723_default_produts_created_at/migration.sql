@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."Product" ALTER COLUMN "createdAt" SET DEFAULT CURRENT_TIMESTAMP;

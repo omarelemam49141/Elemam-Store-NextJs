@@ -7,8 +7,9 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import ProductPrice from "./product-price";
+import { GetProduct } from "@/types/products/get-product.type";
 
-const ProductDetails = ({ product }: { product: any }) => {
+const ProductDetails = ({ product }: { product: GetProduct }) => {
   return (
     <>
       <Card>
@@ -31,9 +32,9 @@ const ProductDetails = ({ product }: { product: any }) => {
         </CardContent>
         <CardFooter>
           <div className="flex-between w-full">
-            <p>{product.rating} Stars</p>
+            <p>{+product.rating} Stars</p>
             {product.stock > 0 ? (
-              <ProductPrice value={product.price} />
+              <ProductPrice value={+product.price} />
             ) : (
               <p className="text-destructive">Out Of Stock</p>
             )}

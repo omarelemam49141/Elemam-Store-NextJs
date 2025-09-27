@@ -9,10 +9,10 @@ const ProductPrice = ({
   const [intValue, floatValue] = stringValue.split(".");
 
   return (
-    <p className={`text-2xl ${className}`}>
+    <p className={`text-2xl space-x-0.5 ${className}`}>
       <span className="align-super text-xs">$</span>
       <span>{intValue}</span>
-      <span className="align-super text-xs">{floatValue}</span>
+      <span className="align-super text-xs">.{floatValue}</span>
     </p>
   );
 };

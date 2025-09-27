@@ -17,7 +17,7 @@ const NavBarMenu = () => {
   return (
     <>
       {/* start medium screen navbar menu */}
-      <div className="hidden md:flex">
+      <div className="hidden md:flex gap-3">
         <ThemeToggler />
 
         <Button variant="ghost" asChild className="cart nav-item flex">
