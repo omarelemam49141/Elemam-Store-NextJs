@@ -1,11 +1,11 @@
 import { PaginatedResponse } from "./../../types/shared/paginated-response.type";
-import { Product } from "@/generated/prisma";
 import { PaginatedInput } from "@/types/shared/paginated-input.type";
 import { prisma } from "../../../db/prisma";
+import { GetProduct } from "@/types/products/get-product.type";
 
 export async function GetProductsPaginated(
   input: PaginatedInput
-): Promise<PaginatedResponse<Product>> {
+): Promise<PaginatedResponse<GetProduct>> {
   const products = await prisma.product.findMany({
     where: input.search
       ? {
@@ -40,7 +40,7 @@ export async function GetProductsPaginated(
   const totalProductsCount = await prisma.product.count();
   const totalNumberOfPages = Math.ceil(totalProductsCount / input.pageSize);
 
-  const response: PaginatedResponse<Product> = {
+  const response: PaginatedResponse<GetProduct> = {
     items: products,
     totalItemsCount: totalProductsCount,
     totalPagesCount: totalNumberOfPages,
@@ -49,7 +49,7 @@ export async function GetProductsPaginated(
   return response;
 }
 
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export async function getProductBySlug(slug: string): Promise<GetProduct | null> {
   return await prisma.product.findFirst({
     where: { slug: slug },
   });
