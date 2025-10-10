@@ -28,7 +28,7 @@ const NavBarMenu = () => {
         </Button>
 
         <Button asChild className="cart nav-item flex">
-          <Link href="/login">
+          <Link href="/sign-in">
             <User />
             <span>Sign In</span>
           </Link>

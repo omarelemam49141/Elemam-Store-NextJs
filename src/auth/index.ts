@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "../../db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
+import { compare } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
 
 export const config = {
@@ -41,9 +41,9 @@ export const config = {
           return null;
         }
 
-        const isCorrectPassword = await bcrypt.compare(
-          userWithEmail.password as string,
-          credentials.password as string
+        const isCorrectPassword = await compare(
+          credentials.password as string,
+          userWithEmail.password as string
         );
 
         if (!isCorrectPassword) {

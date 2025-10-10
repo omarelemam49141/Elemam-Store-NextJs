@@ -1,11 +1,30 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SignInServerAction } from "@/lib/actions/auth/auth.action";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useActionState } from "react";
 
 const SignInForm = () => {
+  //hooks
+  const [actionState, action, isPending] = useActionState(SignInServerAction, {
+    success: false,
+    message: "",
+  });
+
+  const callbackUrl = useSearchParams().get("callbackUrl");
+
   return (
-    <form className="space-y-5">
+    <form className="space-y-5" action={action}>
+      {
+        callbackUrl && (
+          <input type="hidden" name="callbackUrl" value={callbackUrl} />
+        )
+      }
+
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email"></Input>
@@ -16,7 +35,13 @@ const SignInForm = () => {
         <Input id="password" name="password" type="password"></Input>
       </div>
 
-      <Button className="w-full">Sign in</Button>
+      {actionState && !actionState.success && (
+        <div className="text-destructive">{actionState.message}</div>
+      )}
+
+      <Button className="w-full">
+        {isPending ? "Signing in..." : "Sign in"}
+      </Button>
 
       <div className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?

@@ -44,7 +44,6 @@ export async function SignInServerAction(
   }
 }
 
-
 export async function SignOutServerAction() {
-    await signOut();
+  await signOut();
 }
