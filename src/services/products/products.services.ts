@@ -49,7 +49,9 @@ export async function GetProductsPaginated(
   return response;
 }
 
-export async function getProductBySlug(slug: string): Promise<GetProduct | null> {
+export async function getProductBySlug(
+  slug: string
+): Promise<GetProduct | null> {
   return await prisma.product.findFirst({
     where: { slug: slug },
   });

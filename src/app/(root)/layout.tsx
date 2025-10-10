@@ -1,6 +1,11 @@
 import Footer from "@/components/shared/footer/footer";
 import Header from "@/components/shared/header";
+import { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Products",
+};
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
