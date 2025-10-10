@@ -12,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import UserButton from "../user-button";
 
 const NavBarMenu = () => {
   return (
@@ -27,12 +28,7 @@ const NavBarMenu = () => {
           </Link>
         </Button>
 
-        <Button asChild className="cart nav-item flex">
-          <Link href="/sign-in">
-            <User />
-            <span>Sign In</span>
-          </Link>
-        </Button>
+        <UserButton />
       </div>
       {/* end medium screen navbar menu */}
 
@@ -58,15 +54,7 @@ const NavBarMenu = () => {
                 </Link>
               </Button>
 
-              <Button
-                asChild
-                className="cart nav-item flex justify-center w-fit mx-auto"
-              >
-                <Link href="/login">
-                  <User />
-                  <span>Sign In</span>
-                </Link>
-              </Button>
+              <UserButton />
             </div>
             <SheetFooter>
               <SheetClose asChild>
