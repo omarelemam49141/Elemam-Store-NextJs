@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import {
   Card,
   CardContent,
@@ -8,16 +9,15 @@ import {
 import { APP_NAME } from "@/lib/constants";
 import { Metadata } from "next";
 import Image from "next/image";
-import SignInForm from "./sign-in-form";
 import Link from "next/link";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import SignUpForm from "./sign-up-form";
 
 export const metadata: Metadata = {
-  title: "Sign in",
+  title: "Sign up",
 };
 
-const SignInPage = async ({
+const SignUpPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ callbackUrl: string }>;
@@ -44,17 +44,17 @@ const SignInPage = async ({
             ></Image>
           </Link>
 
-          <CardTitle>Sign In</CardTitle>
+          <CardTitle>Sign Up</CardTitle>
 
-          <CardDescription>Sign in to your account</CardDescription>
+          <CardDescription>Register a new account</CardDescription>
         </CardHeader>
 
         <CardContent>
-          <SignInForm></SignInForm>
+          <SignUpForm></SignUpForm>
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default SignInPage;
+export default SignUpPage;

@@ -33,7 +33,7 @@ model Product {
 
 model User {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
+  name          String?
   email         String    @unique(map: "User_Email_idx")
   emailVerified DateTime?
   image         String?

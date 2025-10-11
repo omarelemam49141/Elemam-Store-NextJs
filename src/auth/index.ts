@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "../../db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt-ts-edge";
@@ -14,7 +13,6 @@ export const config = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
   },
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "Sign In",
@@ -54,17 +52,40 @@ export const config = {
           id: userWithEmail.id,
           email: userWithEmail.email,
           name: userWithEmail.name,
+          role: userWithEmail.role,
         };
       },
     }),
   ],
   callbacks: {
-    async session({ session, user, trigger, token }) {
+    async session({ session, user, trigger, token }: any) {
       session.user.id = token.sub!;
+      session.user.role = token.role;
+      session.user.name = token.name;
+
       if (trigger == "update") {
         session.user.name = user.name;
       }
       return session;
+    },
+
+    async jwt({ token, user, trigger, session }: any) {
+      if (user) {
+        token.role = user.role;
+
+        if (!user.name) {
+          token.name = user.email!.split("@")[0];
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        } else {
+          token.name = user.name;
+        }
+      }
+
+      return token;
     },
   },
 } satisfies NextAuthConfig;
