@@ -3,8 +3,9 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "@/assets/styles/globals.css";
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/lib/constants";
 import { ThemeProvider } from "next-themes";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
+import { Toaster } from "@/components/ui/sonner";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -49,6 +50,7 @@ export default function RootLayout({
           enableSystem
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

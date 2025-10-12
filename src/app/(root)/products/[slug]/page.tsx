@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import ProductImages from "@/components/features/products/product-details/product-images";
 import { Button } from "@/components/ui/button";
+import AddToCart from "@/components/features/cart/add-to-cart-btn";
 
 const ProductDetails = async ({
   params,
@@ -72,7 +73,16 @@ const ProductDetails = async ({
               {/* end status */}
 
               {/* start add to cart btn */}
-              <Button className="w-full">Add to cart</Button>
+              <AddToCart
+                cartItem={{
+                  productId: productDetails.id,
+                  name: productDetails.name,
+                  slug: productDetails.slug,
+                  quantity: 1,
+                  price: productDetails.price,
+                  image: productDetails.images![0],
+                }}
+              />
               {/* end add to cart btn */}
             </CardContent>
           </Card>
