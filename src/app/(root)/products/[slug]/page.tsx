@@ -4,8 +4,9 @@ import { GetProductBySlugAction } from "@/lib/actions/products/products.actions"
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import ProductImages from "@/components/features/products/product-details/product-images";
-import { Button } from "@/components/ui/button";
 import AddToCart from "@/components/features/cart/add-to-cart-btn";
+import { DoesItemExistInCart } from "@/lib/actions/cart/cart.actions";
+import RemoveItemFromCart from "@/components/features/cart/remove-from-cart-btn";
 
 const ProductDetails = async ({
   params,
@@ -17,6 +18,8 @@ const ProductDetails = async ({
   if (!productDetails) {
     notFound();
   }
+  const itemExistsInCart = await DoesItemExistInCart(productDetails.id);
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
@@ -60,7 +63,6 @@ const ProductDetails = async ({
                 <ProductPrice value={+productDetails.price} />
               </div>
               {/* end price */}
-
               {/* start status */}
               <div className="flex-between">
                 <p>Status</p>
@@ -71,19 +73,32 @@ const ProductDetails = async ({
                 )}
               </div>
               {/* end status */}
-
               {/* start add to cart btn */}
-              <AddToCart
-                cartItem={{
-                  productId: productDetails.id,
-                  name: productDetails.name,
-                  slug: productDetails.slug,
-                  quantity: 1,
-                  price: productDetails.price,
-                  image: productDetails.images![0],
-                }}
-              />
+              {productDetails.stock > 0 && !itemExistsInCart && (
+                <AddToCart
+                  cartItem={{
+                    productId: productDetails.id,
+                    name: productDetails.name,
+                    slug: productDetails.slug,
+                    quantity: 1,
+                    price: productDetails.price,
+                    image: productDetails.images![0],
+                  }}
+                />
+              )}
               {/* end add to cart btn */}
+
+              {/* start delete from cart btn */}
+              {itemExistsInCart && (
+                <RemoveItemFromCart
+                  cartItem={{
+                    productId: productDetails.id,
+                    name: productDetails.name,
+                    slug: productDetails.slug,
+                  }}
+                />
+              )}
+              {/* end delete from cart btn */}
             </CardContent>
           </Card>
         </div>

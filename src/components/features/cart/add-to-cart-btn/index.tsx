@@ -6,6 +6,7 @@ import { CartItemType } from "@/types/cart/cart-item.type";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const AddToCart = ({ cartItem }: { cartItem: CartItemType }) => {
   //hooks
@@ -22,6 +23,8 @@ const AddToCart = ({ cartItem }: { cartItem: CartItemType }) => {
           onClick: () => router.push("/cart"),
         },
       });
+    } else {
+      toast.error(result.message);
     }
   }
 
