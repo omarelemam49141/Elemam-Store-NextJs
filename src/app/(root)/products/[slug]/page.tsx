@@ -5,8 +5,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import ProductImages from "@/components/features/products/product-details/product-images";
 import AddToCart from "@/components/features/cart/add-to-cart-btn";
-import { DoesItemExistInCart } from "@/lib/actions/cart/cart.actions";
-import RemoveItemFromCart from "@/components/features/cart/remove-from-cart-btn";
+import { GetProductFromCart } from "@/lib/actions/cart/cart.actions";
 
 const ProductDetails = async ({
   params,
@@ -18,7 +17,7 @@ const ProductDetails = async ({
   if (!productDetails) {
     notFound();
   }
-  const itemExistsInCart = await DoesItemExistInCart(productDetails.id);
+  const productFromCart = await GetProductFromCart(productDetails.id);
 
   return (
     <>
@@ -74,7 +73,7 @@ const ProductDetails = async ({
               </div>
               {/* end status */}
               {/* start add to cart btn */}
-              {productDetails.stock > 0 && !itemExistsInCart && (
+              {
                 <AddToCart
                   cartItem={{
                     productId: productDetails.id,
@@ -84,21 +83,11 @@ const ProductDetails = async ({
                     price: productDetails.price,
                     image: productDetails.images![0],
                   }}
+                  productFromCart={productFromCart}
+                  stock={productDetails.stock}
                 />
-              )}
+              }
               {/* end add to cart btn */}
-
-              {/* start delete from cart btn */}
-              {itemExistsInCart && (
-                <RemoveItemFromCart
-                  cartItem={{
-                    productId: productDetails.id,
-                    name: productDetails.name,
-                    slug: productDetails.slug,
-                  }}
-                />
-              )}
-              {/* end delete from cart btn */}
             </CardContent>
           </Card>
         </div>

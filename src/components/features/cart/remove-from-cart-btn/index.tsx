@@ -14,11 +14,12 @@ const RemoveItemFromCart = ({
     slug: string;
   };
 }) => {
-  async function RemoveItemFromCartClient(
-    cartItemId: string,
-    cartItemSlug: string
-  ) {
-    const response = await RemoveFromCartServerAction(cartItemId, cartItemSlug);
+  async function RemoveItemFromCartClient() {
+    const response = await RemoveFromCartServerAction(
+      cartItem.productId,
+      cartItem.slug,
+      cartItem.name
+    );
     if (response.success) {
       toast("Success", {
         description: `${cartItem.name} removed from cart successfully!`,
@@ -29,12 +30,7 @@ const RemoveItemFromCart = ({
   }
 
   return (
-    <Button
-      variant="destructive"
-      onClick={() =>
-        RemoveItemFromCartClient(cartItem.productId, cartItem.slug)
-      }
-    >
+    <Button variant="destructive" onClick={() => RemoveItemFromCartClient()}>
       <Trash /> Remove from cart
     </Button>
   );

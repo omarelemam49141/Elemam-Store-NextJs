@@ -123,7 +123,8 @@ export async function AddToCartServerAction(
 
 export async function RemoveFromCartServerAction(
   cartItemId: string,
-  cartItemSlug: string
+  cartItemSlug: string,
+  cartItemName: string
 ): Promise<GenericResponse<null>> {
   try {
     //get product from db
@@ -176,8 +177,13 @@ export async function RemoveFromCartServerAction(
       userCart.items[itemFromCartIndex] as CartItemType
     ).quantity;
 
-    //remove item from the cart
-    userCart.items.splice(itemFromCartIndex, 1);
+    //remove item from the cart or decrease its quantity by 1
+    if (productQuantityInCart == 1) {
+      userCart.items.splice(itemFromCartIndex, 1);
+    } else {
+      (userCart.items[itemFromCartIndex] as CartItemType).quantity =
+        productQuantityInCart - 1;
+    }
 
     //calculate cart new prices
     const newCartPrices = CalculateCartPrices(userCart.items as CartItemType[]);
@@ -202,7 +208,7 @@ export async function RemoveFromCartServerAction(
     //return success response
     const response: GenericResponse<null> = {
       success: true,
-      message: `Item has been deleted successfully!`,
+      message: `${cartItemName} has been deleted successfully!`,
     };
 
     revalidatePath(`/products/${cartItemSlug}`);
@@ -210,6 +216,47 @@ export async function RemoveFromCartServerAction(
     return response;
   } catch (error) {
     return getErrorResponse<null>(error);
+  }
+}
+
+export async function GetProductFromCart(
+  productId: string
+): Promise<CartItemType | undefined> {
+  try {
+    //get the cart session id
+    const cartSessionId = (await cookies()).get(CART_ID_SESSION)?.value;
+
+    //get the user id
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    //get the cart from database
+    const userCart = await prisma.cart.findFirst({
+      where: {
+        OR: [
+          {
+            userId: userId,
+          },
+          {
+            sessionCartId: cartSessionId,
+          },
+        ],
+      },
+    });
+
+    //throw error if cart doesn't exist
+    if (!userCart) {
+      throw new Error("Cart doesn't exist");
+    }
+
+    //get item from the cart
+    const itemFromCart = userCart.items.find(
+      (cartItem) => (cartItem as CartItemType).productId === productId
+    );
+
+    return itemFromCart as CartItemType;
+  } catch (error) {
+    return undefined;
   }
 }
 
