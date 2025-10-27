@@ -9,6 +9,8 @@ import { cookies } from "next/headers";
 import { prisma } from "../../../../db/prisma";
 import { FixedRound2, getErrorResponse } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { CartType } from "@/types/cart/cart.type";
+import { Cart } from "@/generated/prisma";
 
 function CalculateCartPrices(cartItems: CartItemType[]): {
   itemsPrice: number;
@@ -114,6 +116,7 @@ export async function AddToCartServerAction(
     };
 
     revalidatePath(`/products/${cartItem.slug}`);
+    revalidatePath('/cart');
 
     return response;
   } catch (error) {
@@ -212,6 +215,7 @@ export async function RemoveFromCartServerAction(
     };
 
     revalidatePath(`/products/${cartItemSlug}`);
+    revalidatePath('/cart');
 
     return response;
   } catch (error) {
@@ -295,4 +299,42 @@ export async function DoesItemExistInCart(
   );
 
   return itemFromCartIndex != -1;
+}
+
+export async function GetCartAction(): Promise<GenericResponse<CartType | null>> {
+  try {
+    //get the cart session id
+    const cartSessionId = (await cookies()).get(CART_ID_SESSION)?.value;
+
+    //get the user id
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    //get the cart from database
+    const userCart = await prisma.cart.findFirst({
+      where: { OR: [{ userId: userId }, { sessionCartId: cartSessionId }] },
+    });
+
+    if (!userCart) {
+      return {
+        success: true,
+        data: null,
+      };
+    }
+
+    //return the cart
+    return {
+      success: true,
+      data: {
+        ...userCart,
+        items: userCart.items as CartItemType[],
+        itemsPrice: userCart.itemsPrice.toNumber(),
+        taxPrice: userCart.taxPrice.toNumber(),
+        shippingPrice: userCart.shippingPrice.toNumber(),
+        totalPrice: userCart.totalPrice.toNumber(),
+      },
+    };
+  } catch (error) {
+    return getErrorResponse<CartType>(error);
+  }
 }
