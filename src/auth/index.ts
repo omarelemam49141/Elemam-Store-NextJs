@@ -1,10 +1,9 @@
 import NextAuth from "next-auth";
-import { prisma } from "../../db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { compare } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
 import { CART_ID_SESSION } from "@/lib/constants";
 import { NextResponse } from "next/server";
+import { AuthService } from "@/services/auth/auth.service";
 
 export const config = {
   pages: {
@@ -26,43 +25,22 @@ export const config = {
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials) {
           return null;
         }
 
-        const userWithEmail = await prisma.user.findFirst({
-          where: {
-            email: credentials.email as string,
-          },
-        });
-
-        if (!userWithEmail) {
-          return null;
-        }
-
-        const isCorrectPassword = await compare(
-          credentials.password as string,
-          userWithEmail.password as string
+        return await AuthService.validateCredentials(
+          credentials.email as string,
+          credentials.password as string
         );
-
-        if (!isCorrectPassword) {
-          return null;
-        }
-
-        return {
-          id: userWithEmail.id,
-          email: userWithEmail.email,
-          name: userWithEmail.name,
-          role: userWithEmail.role,
-        };
       },
     }),
   ],
   callbacks: {
-    async session({ session, user, trigger, token }: any) {
+    async session({ session, user, trigger, token }) {
       session.user.id = token.sub!;
-      session.user.role = token.role;
+      session.user.role = token.role as string;
       session.user.name = token.name;
 
       if (trigger == "update") {
@@ -71,17 +49,14 @@ export const config = {
       return session;
     },
 
-    async jwt({ token, user, trigger, session }: any) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.role = user.role;
 
         if (!user.name) {
           token.name = user.email!.split("@")[0];
-
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { name: token.name },
-          });
+          // Note: We'll update the user name in the API route instead of here
+          // to avoid Prisma calls in the Edge Function
         } else {
           token.name = user.name;
         }
@@ -94,7 +69,7 @@ export const config = {
       return token;
     },
 
-    async authorized({request, auth}) {
+    async authorized({request}) {
       const cartIdSession = request.cookies.get(CART_ID_SESSION);
       if (!cartIdSession) {
         const newCartIdSession = crypto.randomUUID();
