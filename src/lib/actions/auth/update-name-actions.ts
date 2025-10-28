@@ -1,6 +1,6 @@
 "use server";
 
-import { AuthService } from "@/services/auth/auth.service";
+import { AuthService } from "@/services/auth/auth-service";
 import { auth } from "@/auth";
 
 export async function updateUserNameFromEmail() {

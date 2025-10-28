@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 import { CART_ID_SESSION } from "@/lib/constants";
 import { NextResponse } from "next/server";
-import { EdgeAuthService } from "@/services/auth/edge-auth.service";
+import { EdgeAuthService } from "@/services/auth/edge-auth-service";
 
 export const config = {
   pages: {

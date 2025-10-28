@@ -1,7 +1,7 @@
 import ProductsList from "@/components/features/products/products-list";
-import { GetProductsPaginatedAction } from "@/lib/actions/products/products.actions";
+import { GetProductsPaginatedAction } from "@/lib/actions/products/products-actions";
 import { NEWEST_ARRIVAL_PRODUCTS_COUNT } from "@/lib/constants";
-import { PaginatedInput } from "@/types/shared/paginated-input.type";
+import { PaginatedInput } from "@/types/shared/paginated-input-type";
 
 export const dynamic = "force-dynamic";
 

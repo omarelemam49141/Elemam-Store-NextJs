@@ -1,15 +1,15 @@
 "use server";
-import { CartItem } from "./../../../validations/cart/cart-item.validation";
+import { CartItem } from "./../../../validations/cart/cart-item-validation";
 
 import { auth } from "@/auth";
 import { CART_ID_SESSION } from "@/lib/constants";
-import { CartItemType } from "@/types/cart/cart-item.type";
-import { GenericResponse } from "@/types/shared/generic-response.type";
+import { CartItemType } from "@/types/cart/cart-item-type";
+import { GenericResponse } from "@/types/shared/generic-response-type";
 import { cookies } from "next/headers";
-import { prisma } from "../../../../db/prisma";
+import { prisma } from "../../db/prisma";
 import { FixedRound2, getErrorResponse } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
-import { CartType } from "@/types/cart/cart.type";
+import { CartType } from "@/types/cart/cart-type";
 import { Cart } from "@/generated/prisma";
 
 function CalculateCartPrices(cartItems: CartItemType[]): {

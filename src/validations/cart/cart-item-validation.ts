@@ -1,5 +1,5 @@
 import z from "zod";
-import { PriceValidation } from "../shared/shared.validation";
+import { PriceValidation } from "../shared/shared-validation";
 
 export const CartItem = z.object({
   productId: z.string().min(1, "Product is required"),

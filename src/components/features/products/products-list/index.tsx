@@ -1,5 +1,5 @@
 import ProductDetails from "../product-details";
-import { GetProduct } from "@/types/products/get-product.type";
+import { GetProduct } from "@/types/products/get-product-type";
 
 const ProductsList = ({
   data,

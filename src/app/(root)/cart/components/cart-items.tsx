@@ -1,4 +1,4 @@
-import { CartItemType } from "@/types/cart/cart-item.type";
+import { CartItemType } from "@/types/cart/cart-item-type";
 import CartItemDetails from "./cart-item-details";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 

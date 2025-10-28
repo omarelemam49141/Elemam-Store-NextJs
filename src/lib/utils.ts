@@ -1,5 +1,5 @@
 import { Prisma } from "@/generated/prisma";
-import { GenericResponse } from "@/types/shared/generic-response.type";
+import { GenericResponse } from "@/types/shared/generic-response-type";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { ZodError } from "zod";

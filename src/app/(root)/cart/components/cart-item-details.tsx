@@ -1,6 +1,6 @@
 "use client";
 
-import { CartItemType } from "@/types/cart/cart-item.type";
+import { CartItemType } from "@/types/cart/cart-item-type";
 import Link from "next/link";
 import Image from "next/image";
 import { TableCell } from "@/components/ui/table";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Loader, Minus, Plus } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { AddToCartServerAction, RemoveFromCartServerAction } from "@/lib/actions/cart/cart.actions";
+import { AddToCartServerAction, RemoveFromCartServerAction } from "@/lib/actions/cart/cart-actions";
 
 export default function CartItemDetails({ cartItem }: { cartItem: CartItemType }) {
   //hooks

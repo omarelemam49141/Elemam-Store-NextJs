@@ -1,7 +1,7 @@
-import { PaginatedResponse } from "./../../types/shared/paginated-response.type";
-import { PaginatedInput } from "@/types/shared/paginated-input.type";
-import { prisma } from "../../../db/prisma";
-import { GetProduct } from "@/types/products/get-product.type";
+import { PaginatedResponse } from "./../../types/shared/paginated-response-type";
+import { PaginatedInput } from "@/types/shared/paginated-input-type";
+import { prisma } from "../../lib/db/prisma";
+import { GetProduct } from "@/types/products/get-product-type";
 
 export async function GetProductsPaginated(
   input: PaginatedInput

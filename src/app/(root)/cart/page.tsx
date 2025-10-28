@@ -1,4 +1,4 @@
-import { GetCartAction } from "@/lib/actions/cart/cart.actions";
+import { GetCartAction } from "@/lib/actions/cart/cart-actions";
 import EmptyCart from "./components/empty-cart";
 import CartItems from "./components/cart-items";
 import { Metadata } from "next";

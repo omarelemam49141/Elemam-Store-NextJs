@@ -3,10 +3,10 @@
 import {
   getProductBySlug,
   GetProductsPaginated,
-} from "@/services/products/products.services";
-import { PaginatedInput } from "@/types/shared/paginated-input.type";
-import { PaginatedResponse } from "@/types/shared/paginated-response.type";
-import { GetProduct } from "@/types/products/get-product.type";
+} from "@/services/products/products-service";
+import { PaginatedInput } from "@/types/shared/paginated-input-type";
+import { PaginatedResponse } from "@/types/shared/paginated-response-type";
+import { GetProduct } from "@/types/products/get-product-type";
 
 export async function GetProductsPaginatedAction(
   input: PaginatedInput

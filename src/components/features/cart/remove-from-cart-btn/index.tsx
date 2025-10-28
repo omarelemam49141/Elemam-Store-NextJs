@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { RemoveFromCartServerAction } from "@/lib/actions/cart/cart.actions";
+import { RemoveFromCartServerAction } from "@/lib/actions/cart/cart-actions";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
 

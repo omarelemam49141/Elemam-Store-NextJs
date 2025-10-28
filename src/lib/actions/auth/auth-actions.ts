@@ -1,12 +1,12 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
-import { GenericResponse } from "@/types/shared/generic-response.type";
-import { SignInValidation } from "@/validations/auth/sign-in.validation";
-import { SignUpValidation } from "@/validations/auth/sign-up.validation";
+import { GenericResponse } from "@/types/shared/generic-response-type";
+import { SignInValidation } from "@/validations/auth/sign-in-validation";
+import { SignUpValidation } from "@/validations/auth/sign-up-validation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { ZodError } from "zod";
-import { prisma } from "../../../../db/prisma";
+import { prisma } from "../../db/prisma";
 import { hashSync } from "bcrypt-ts-edge";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import ProductPrice from "./product-price";
-import { GetProduct } from "@/types/products/get-product.type";
+import { GetProduct } from "@/types/products/get-product-type";
 
 const ProductDetails = ({ product }: { product: GetProduct }) => {
   return (

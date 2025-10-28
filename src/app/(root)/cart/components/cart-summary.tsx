@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { CartType } from "@/types/cart/cart.type";
+import { CartType } from "@/types/cart/cart-type";
 import { Loader, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -27,7 +27,7 @@ export default function CartSummary({ cart }: { cart: CartType }) {
 
       <CardFooter>
         <Button variant="default" className="w-full" disabled={isPending} onClick={() => startTransition(async () => {
-          router.push("/checkout");
+          router.push("/shipping-address");
         })}> 
         {isPending ? <Loader className="w-4 h-4 animate-spin" /> : <ShoppingCart className="w-4 h-4" />}
             Checkout

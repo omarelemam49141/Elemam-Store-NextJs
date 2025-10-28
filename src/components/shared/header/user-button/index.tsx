@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignOutServerAction } from "@/lib/actions/auth/auth.action";
+import { SignOutServerAction } from "@/lib/actions/auth/auth-actions";
 import { User } from "lucide-react";
 import Link from "next/link";
 

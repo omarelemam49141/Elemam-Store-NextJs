@@ -1,11 +1,11 @@
 import ProductPrice from "@/components/features/products/product-details/product-price";
 import { Card, CardContent } from "@/components/ui/card";
-import { GetProductBySlugAction } from "@/lib/actions/products/products.actions";
+import { GetProductBySlugAction } from "@/lib/actions/products/products-actions";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import ProductImages from "@/components/features/products/product-details/product-images";
 import AddToCart from "@/components/features/cart/add-to-cart-btn";
-import { GetProductFromCart } from "@/lib/actions/cart/cart.actions";
+import { GetProductFromCart } from "@/lib/actions/cart/cart-actions";
 
 const ProductDetails = async ({
   params,

@@ -1,4 +1,4 @@
-import { prisma } from "../../../db/prisma";
+import { prisma } from "../../lib/db/prisma";
 import { compare } from "bcrypt-ts-edge";
 
 export class AuthService {

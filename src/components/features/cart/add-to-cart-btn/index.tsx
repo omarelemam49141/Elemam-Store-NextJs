@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import {
   AddToCartServerAction,
   RemoveFromCartServerAction,
-} from "@/lib/actions/cart/cart.actions";
-import { CartItemType } from "@/types/cart/cart-item.type";
+} from "@/lib/actions/cart/cart-actions";
+import { CartItemType } from "@/types/cart/cart-item-type";
 import { Loader, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
