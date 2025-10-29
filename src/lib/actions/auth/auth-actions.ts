@@ -8,10 +8,13 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { ZodError } from "zod";
 import { prisma } from "../../db/prisma";
 import { hashSync } from "bcrypt-ts-edge";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { MigrateSessionCartToUserAction, RollbackCartMigrationAction } from "../cart/cart-actions";
+import { cookies } from "next/headers";
+import { CART_ID_SESSION } from "@/lib/constants";
+import { redirect } from "next/navigation";
 
 export async function SignUpServerAction(
-  prevState: GenericResponse<any>,
+  prevState: GenericResponse<unknown>,
   formData: FormData
 ) {
   try {
@@ -26,7 +29,7 @@ export async function SignUpServerAction(
 
     const hashedPassword = hashSync(parsedData.password, 10);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name: parsedData.name,
         password: hashedPassword,
@@ -34,18 +37,44 @@ export async function SignUpServerAction(
       },
     });
 
-    await signIn("credentials", {
-      email: parsedData.email,
-      password: plainPassword,
-    });
+    // Store original cart state for potential rollback
+    const sessionCartId = (await cookies()).get(CART_ID_SESSION)?.value;
+    let originalCart = null;
+    if (sessionCartId) {
+      originalCart = await prisma.cart.findFirst({
+        where: { sessionCartId: sessionCartId }
+      });
+    }
 
-    const response: GenericResponse<any> = {
+    try {
+      // Migrate session cart to user cart before signIn
+      await MigrateSessionCartToUserAction(user.id);
+
+      await signIn("credentials", {
+        email: parsedData.email,
+        password: plainPassword,
+      });
+    } catch (signInError) {
+      // Check if it's a redirect error (successful authentication)
+      if (isRedirectError(signInError)) {
+        // Authentication succeeded, keep the cart migrated
+        throw signInError;
+      }
+      
+      // If it's a real error, rollback the cart migration
+      if (originalCart && sessionCartId) {
+        await RollbackCartMigrationAction(originalCart.id, sessionCartId);
+      }
+      throw signInError;
+    }
+
+    const response: GenericResponse<unknown> = {
       success: true,
       message: "Sign up successfully!",
     };
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (isRedirectError(error)) {
       throw error;
     }
@@ -61,7 +90,7 @@ export async function SignUpServerAction(
       };
     }
 
-    const response: GenericResponse<any> = {
+    const response: GenericResponse<unknown> = {
       success: false,
       message: "Sign up failed",
       data: {
@@ -83,7 +112,45 @@ export async function SignInServerAction(
       password: formData.get("password"),
     });
 
-    await signIn("credentials", signInData);
+    // Get user ID from the database before signIn (since signIn redirects)
+    const user = await prisma.user.findFirst({
+      where: { email: signInData.email }
+    });
+
+    if (!user) {
+      return {
+        success: false,
+        message: "Invalid email or password",
+      };
+    }
+
+    // Store original cart state for potential rollback
+    const sessionCartId = (await cookies()).get(CART_ID_SESSION)?.value;
+    let originalCart = null;
+    if (sessionCartId) {
+      originalCart = await prisma.cart.findFirst({
+        where: { sessionCartId: sessionCartId }
+      });
+    }
+
+    try {
+      // Migrate session cart to user cart before signIn
+      await MigrateSessionCartToUserAction(user.id);
+
+      await signIn("credentials", signInData);
+    } catch (signInError) {
+      // Check if it's a redirect error (successful authentication)
+      if (isRedirectError(signInError)) {
+        // Authentication succeeded, keep the cart migrated
+        throw signInError;
+      }
+      
+      // If it's a real error, rollback the cart migration
+      if (originalCart && sessionCartId) {
+        await RollbackCartMigrationAction(originalCart.id, sessionCartId);
+      }
+      throw signInError;
+    }
 
     const response: GenericResponse<null> = {
       success: true,
@@ -113,4 +180,5 @@ export async function SignInServerAction(
 
 export async function SignOutServerAction() {
   await signOut();
+  redirect("/sign-in");
 }

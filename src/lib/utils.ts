@@ -57,7 +57,7 @@ export function getErrorMessage(error: unknown): string {
   return "Unexpected error occurred.";
 }
 
-export function getErrorResponse<T>(error: unknown) {
+export function getErrorResponse<T>(error: unknown): GenericResponse<T> {
   const response: GenericResponse<T> = {
     success: false,
     message: getErrorMessage(error),

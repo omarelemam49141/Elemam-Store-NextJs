@@ -1,5 +1,32 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) folder:
+
+- **[Quick Start Guide](./docs/quick-start.md)** - Get up and running quickly
+- **[Cart Cleanup System](./docs/cart-cleanup-system.md)** - Detailed guide to the orphaned cart cleanup and rate limiting system
+- **[API Reference](./docs/api-reference.md)** - Complete API documentation
+- **[Environment Variables](./docs/environment-variables.md)** - Environment configuration guide
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```env
+DATABASE_URL="postgresql://..."
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-nextauth-secret-here"
+CRON_SECRET="your-secure-cron-secret-here"
+```
+
+### CRON_SECRET
+The `CRON_SECRET` is required for the automated cart cleanup cron job. Generate a secure random string for this value. This cron job runs every 15 minutes to clean up orphaned anonymous carts older than 2 hours and restore product stock.
+
+**Important**: You must also add `CRON_SECRET` to your Vercel environment variables in the dashboard for the cron job to work in production.
+
+For detailed environment setup, see the [Environment Variables Guide](./docs/environment-variables.md).
+
 ## Getting Started
 
 First, run the development server:

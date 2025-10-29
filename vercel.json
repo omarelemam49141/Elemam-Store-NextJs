@@ -7,6 +7,12 @@
       "maxDuration": 30
     }
   },
+  "crons": [
+    {
+      "path": "/api/cron/cleanup-carts",
+      "schedule": "*/15 * * * *"
+    }
+  ],
   "env": {
     "PRISMA_GENERATE_SKIP_AUTOINSTALL": "true"
   },

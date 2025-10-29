@@ -51,6 +51,7 @@ export const config = {
 
     async jwt({ token, user, trigger, session }) {
       if (user) {
+        token.sub = user.id;
         token.role = user.role;
 
         if (!user.name) {
@@ -65,6 +66,9 @@ export const config = {
       if (trigger === "update") {
         token.name = session.user.name
       }
+
+      // Note: Cart migration is now handled by server actions
+      // to avoid Prisma imports in Edge Runtime
 
       return token;
     },

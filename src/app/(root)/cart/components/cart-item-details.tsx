@@ -24,7 +24,7 @@ export default function CartItemDetails({ cartItem }: { cartItem: CartItemType }
       </TableCell>
       <TableCell>
         <p className="text-sm font-medium flex items-center gap-2">
-          <Button variant="outline" disabled={cartItem.quantity <= 1 || isPending} onClick={() => startTransition(async () => {
+          <Button variant="outline" disabled={isPending} onClick={() => startTransition(async () => {
             const response = await RemoveFromCartServerAction(cartItem.productId, cartItem.slug, cartItem.name);
             if (response.success) {
               toast.success(response.message);
