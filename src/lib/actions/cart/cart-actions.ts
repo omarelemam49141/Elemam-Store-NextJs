@@ -385,6 +385,10 @@ export async function MigrateSessionCartToUserAction(
       },
     });
 
+    await prisma.cart.deleteMany({
+      where: {userId: userId}
+    })
+
     if (cart) {
       await prisma.cart.update({
         where: { id: cart.id },
