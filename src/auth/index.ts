@@ -73,7 +73,21 @@ export const config = {
       return token;
     },
 
-    async authorized({request}) {
+    async authorized({request, auth}) {
+      const protectedPaths = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/user\/(.*)/,
+        /\/admin\/(.*)/,
+        /\/profile/,
+      ]
+
+      const url = request.nextUrl.pathname;
+      const isProtectedPath = protectedPaths.some(path => url.match(path));
+      if (!auth && isProtectedPath) {
+        return false;
+      }
+
       const cartIdSession = request.cookies.get(CART_ID_SESSION);
       if (!cartIdSession) {
         const newCartIdSession = crypto.randomUUID();
