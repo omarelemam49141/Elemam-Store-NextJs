@@ -14,9 +14,9 @@ import { CART_ID_SESSION } from "@/lib/constants";
 import { redirect } from "next/navigation";
 
 export async function SignUpServerAction(
-  prevState: GenericResponse<unknown>,
+  prevState: GenericResponse<{ name?: FormDataEntryValue | null; email?: FormDataEntryValue | null }>,
   formData: FormData
-) {
+): Promise<GenericResponse<{ name?: FormDataEntryValue | null; email?: FormDataEntryValue | null }>> {
   try {
     const parsedData = SignUpValidation.parse({
       name: formData.get("name"),
@@ -68,7 +68,7 @@ export async function SignUpServerAction(
       throw signInError;
     }
 
-    const response: GenericResponse<unknown> = {
+    const response: GenericResponse<{ name?: FormDataEntryValue | null; email?: FormDataEntryValue | null }> = {
       success: true,
       message: "Sign up successfully!",
     };
@@ -90,7 +90,7 @@ export async function SignUpServerAction(
       };
     }
 
-    const response: GenericResponse<unknown> = {
+    const response: GenericResponse<{ name?: FormDataEntryValue | null; email?: FormDataEntryValue | null }> = {
       success: false,
       message: "Sign up failed",
       data: {

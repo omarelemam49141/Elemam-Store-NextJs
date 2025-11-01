@@ -13,10 +13,6 @@ const SignUpForm = () => {
   const [actionState, action, isPending] = useActionState(SignUpServerAction, {
     success: false,
     message: "",
-    data: {
-      name: "",
-      email: "",
-    },
   });
 
   const callbackUrl = useSearchParams().get("callbackUrl");
@@ -33,7 +29,7 @@ const SignUpForm = () => {
           id="name"
           name="name"
           type="text"
-          defaultValue={actionState.data?.name}
+          defaultValue={actionState.data?.name?.toString() ?? ''}
         ></Input>
       </div>
 
@@ -43,7 +39,7 @@ const SignUpForm = () => {
           id="email"
           name="email"
           type="email"
-          defaultValue={actionState.data?.email}
+          defaultValue={actionState.data?.email?.toString() ?? ''}
         ></Input>
       </div>
 
