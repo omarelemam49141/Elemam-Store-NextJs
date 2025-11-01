@@ -76,7 +76,7 @@ export const config = {
     async authorized({request, auth}) {
       const protectedPaths = [
         /\/shipping-address/,
-        /\/payment-method/,
+        /\/payment-methods/,
         /\/user\/(.*)/,
         /\/admin\/(.*)/,
         /\/profile/,

@@ -1,3 +1,4 @@
+import { enPaymentMethodType } from "@/generated/prisma";
 import { hashSync } from "bcrypt-ts-edge";
 
 const sampleData = {
@@ -119,6 +120,24 @@ const sampleData = {
       banner: null,
     },
   ],
+
+  paymentMethods: [
+    {
+      type: enPaymentMethodType.Stripe,
+      isAvailable: true,
+      name: "Stripe",
+    },
+    {
+      type: enPaymentMethodType.PayPal,
+      isAvailable: true,
+      name: "PayPal",
+    },
+    {
+      type: enPaymentMethodType.CashOnDelivery,
+      isAvailable: true,
+      name: "Cash On Delivery",
+    }
+  ]
 };
 
 export default sampleData;

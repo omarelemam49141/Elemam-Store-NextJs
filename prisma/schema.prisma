@@ -37,16 +37,17 @@ model User {
   email         String    @unique(map: "User_Email_idx")
   emailVerified DateTime?
   image         String?
-  password      String?
-  PaymentMethod String?
-  role          String    @default("user")
+  password        String?
+  paymentMethodId String?   @db.Uuid
+  role            String    @default("user")
   address       Json?     @db.Json
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
   updatedAt     DateTime  @updatedAt @db.Timestamp(6)
   accounts      Account[]
   Session       Session[]
-  is_deleted    Boolean   @default(false)
+  is_deleted    Boolean        @default(false)
   Cart          Cart[]
+  paymentMethod PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: NoAction)
 }
 
 model Account {
@@ -98,4 +99,18 @@ model Cart {
   totalPrice    Decimal  @db.Decimal(12, 2)
   createdAt     DateTime @default(now()) @db.Timestamp(6)
   user          User?    @relation(fields: [userId], references: [id], onDelete: NoAction)
+}
+
+enum enPaymentMethodType {
+  Stripe
+  PayPal
+  CashOnDelivery
+}
+
+model PaymentMethod {
+  id          String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  type        enPaymentMethodType
+  isAvailable Boolean              @default(true)
+  users       User[]
 }

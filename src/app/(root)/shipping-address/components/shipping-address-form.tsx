@@ -10,6 +10,7 @@ import { ShippingAddressType } from "@/types/user/shipping-address-type";
 import { shippingAddressValidation, defaultShippingAddress } from "@/validations/user/shipping-address-validation";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner";
 import * as z from "zod"
@@ -27,6 +28,7 @@ export default function ShippingAddressForm({user}: {user: User}) {
     const response = await updateShippingAddressServerAction(data);
     if (response.success) {
       toast.success(response.message);
+      redirect("/payment-methods");
     } else {
       toast.error(response.message);
     }

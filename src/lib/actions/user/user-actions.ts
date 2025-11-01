@@ -40,3 +40,39 @@ export async function updateShippingAddressServerAction(data: ShippingAddressTyp
         return getErrorResponse<null>(error);
     }
 }
+
+export async function updateUserPaymentMethodServerAction(previousState: GenericResponse<null> | undefined, formData: FormData): Promise<GenericResponse<null>> {
+    try {
+        const session = await auth();
+        const userId = session?.user?.id;
+        if (!userId) {
+            throw new Error("User id not found");
+        }
+        const user = await prisma.user.findFirst({
+            where: { id: userId },
+        });
+        if (!user) {
+            throw new Error("User not found");
+        }
+        const paymentMethodId = formData.get("paymentMethodId") as string;
+        if (!paymentMethodId) {
+            throw new Error("Payment method id not found");
+        }
+        if (user.paymentMethodId == paymentMethodId) {
+            return {
+                success: true,
+                message: "User already has this payment method",
+            };
+        }
+        await prisma.user.update({
+            where: { id: userId },
+            data: { paymentMethodId: paymentMethodId },
+        });
+        return {
+            success: true,
+            message: "User payment method updated successfully",
+        };
+    } catch (error) {
+        return getErrorResponse<null>(error);
+    }
+}
