@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { PriceValidation } from "../shared/shared.validation";
+import { PriceValidation } from "../shared/shared-validation";
 
 export const CreateUpdateProductInputValidation = z.object({
   name: z.string().min(3, "Product name must be at least 3 characters long"),
