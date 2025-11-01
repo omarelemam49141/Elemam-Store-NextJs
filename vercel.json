@@ -10,7 +10,7 @@
   "crons": [
     {
       "path": "/api/cron/cleanup-carts",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 3 * * *"
     }
   ],
   "env": {

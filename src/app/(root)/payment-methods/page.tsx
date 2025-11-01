@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import CheckoutSteps from "@/components/shared/features/checkout-steps";
 import { enCheckoutSteps } from "@/enums/checkout-steps-enum";
 import { prisma } from "@/lib/db/prisma";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import PaymentMethodsForm from "./payment-methods-form";
 import { GetPaymentMethodsAction } from "@/lib/actions/payment-methods/payment-methods-actions";
 
