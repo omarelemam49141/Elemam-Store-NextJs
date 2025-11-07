@@ -73,12 +73,12 @@ export async function GetOrderDetailsAction(id: string) {
             },
 
 
-        })
+        }) as OrderWithRelations | null
         if (!order) {
             console.log("Order not found");
             return getErrorResponse<null>("Order not found");
         }
-        return getSuccessResponse<OrderWithRelations>("Order details", order);
+        return getSuccessResponse("Order details", order);
     } catch (error) {
         console.log("Error getting order details", error);
 
