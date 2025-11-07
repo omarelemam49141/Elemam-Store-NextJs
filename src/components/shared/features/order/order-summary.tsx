@@ -19,9 +19,11 @@ import { Loader, ShoppingCart } from "lucide-react";
 export default function OrderSummary({
   cart,
   user,
+  canPlaceOrder
 }: {
   cart: CartType;
   user: User;
+  canPlaceOrder: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -59,6 +61,7 @@ export default function OrderSummary({
           <span>${cart?.totalPrice?.toFixed(2) ?? 0}</span>
         </div>
       </CardContent>
+      {canPlaceOrder && (
       <CardFooter>
         <Button
           variant="default"
@@ -79,6 +82,7 @@ export default function OrderSummary({
           )}
         </Button>
       </CardFooter>
+      )}
     </Card>
   );
 }

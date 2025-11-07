@@ -59,7 +59,7 @@ export async function CreateOrderServerAction(user: User, cart: CartType) {
 
 export async function GetOrderDetailsAction(id: string) {
     try {
-        const order = await prisma.order.findUnique({
+        const order = await prisma.order.findFirst({
             where: { id: id },
             include: {
                 orderItems: {
@@ -75,10 +75,13 @@ export async function GetOrderDetailsAction(id: string) {
 
         })
         if (!order) {
+            console.log("Order not found");
             return getErrorResponse<null>("Order not found");
         }
         return getSuccessResponse<OrderWithRelations>("Order details", order);
     } catch (error) {
+        console.log("Error getting order details", error);
+
         return getErrorResponse<null>(error);
     }
 }

@@ -4,6 +4,7 @@ import PaymentMethodSummary from "@/components/shared/features/order/payment-met
 import ShippingAddressSummary from "@/components/shared/features/order/shipping-address-summary";
 import { User } from "@/generated/prisma";
 import { GetOrderDetailsAction } from "@/lib/actions/orders/orders-actions";
+import { getUuidSuffix } from "@/lib/utils";
 import { CartItemType } from "@/types/cart/cart-item-type";
 import { CartType } from "@/types/cart/cart-type";
 import { PaymentMethodType } from "@/types/payment-methods/payment-method-type";
@@ -34,6 +35,7 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ i
   } as CartType;
   return (
     <>
+    <h1 className="text-2xl font-bold">Order #{getUuidSuffix(orderDetails?.id ?? "")} Details</h1>
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 mt-10">
       <div className="lg:col-span-3">
         <div className="mb-5">
@@ -54,7 +56,7 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ i
       </div>
 
       <div className="lg:col-span-1">
-        <OrderSummary cart={cartFromOrder} user={orderDetails?.user as User} />
+        <OrderSummary cart={cartFromOrder} user={orderDetails?.user as User} canPlaceOrder={false} />
       </div>
     </div>
   </>

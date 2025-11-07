@@ -75,7 +75,7 @@ export default async function PlaceOrderPage() {
         </div>
 
         <div className="lg:col-span-1">
-          <OrderSummary cart={cart} user={user} />
+          <OrderSummary cart={cart} user={user} canPlaceOrder={true} />
         </div>
       </div>
     </>

@@ -66,6 +66,14 @@ export function getErrorResponse<T>(error: unknown): GenericResponse<T> {
   return response;
 }
 
+export function getUuidSuffix(uuid: string): string {
+  if (!uuid) {
+    return '...';
+  }
+
+  return `...${uuid.slice(-6)}`;
+}
+
 export function getSuccessResponse<T>(message: string, data: T | null = null): GenericResponse<T | null> {
   const response: GenericResponse<T | null> = {
     success: true,
