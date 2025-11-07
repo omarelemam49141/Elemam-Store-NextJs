@@ -82,3 +82,24 @@ export function getSuccessResponse<T>(message: string, data: T | null = null): G
   };
   return response;
 }
+
+export function toNumeric(value: unknown, fallback = 0): number {
+  if (typeof value === 'number') {
+    return value
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number(value)
+    return Number.isNaN(parsed) ? fallback : parsed
+  }
+
+  if (value && typeof value === 'object' && 'toNumber' in value && typeof (value as { toNumber: unknown }).toNumber === 'function') {
+    try {
+      return (value as { toNumber: () => number }).toNumber()
+    } catch {
+      return fallback
+    }
+  }
+
+  return fallback
+}

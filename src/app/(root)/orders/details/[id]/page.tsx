@@ -4,7 +4,7 @@ import PaymentMethodSummary from "@/components/shared/features/order/payment-met
 import ShippingAddressSummary from "@/components/shared/features/order/shipping-address-summary";
 import { User } from "@/generated/prisma";
 import { GetOrderDetailsAction } from "@/lib/actions/orders/orders-actions";
-import { getUuidSuffix } from "@/lib/utils";
+import { getUuidSuffix, toNumeric } from "@/lib/utils";
 import { CartItemType } from "@/types/cart/cart-item-type";
 import { CartType } from "@/types/cart/cart-type";
 import { PaymentMethodType } from "@/types/payment-methods/payment-method-type";
@@ -23,15 +23,15 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ i
     name: orderItem.product.name,
     slug: orderItem.product.slug,
     quantity: orderItem.qty,
-    price: orderItem.price.toNumber(),
+    price: toNumeric(orderItem.price),
     image: orderItem.product.images[0],
   })) as CartItemType[];
   const cartFromOrder = {
     items: cartItemsInOrder,
-    itemsPrice: orderDetails?.itemsPrice.toNumber(),
-    shippingPrice: orderDetails?.shippingPrice.toNumber(),
-    taxPrice: orderDetails?.taxPrice.toNumber(),
-    totalPrice: orderDetails?.totalPrice.toNumber(),
+    itemsPrice: toNumeric(orderDetails?.itemsPrice),
+    shippingPrice: toNumeric(orderDetails?.shippingPrice),
+    taxPrice: toNumeric(orderDetails?.taxPrice),
+    totalPrice: toNumeric(orderDetails?.totalPrice),
   } as CartType;
   return (
     <>

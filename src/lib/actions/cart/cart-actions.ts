@@ -7,12 +7,15 @@ import { CartItemType } from "@/types/cart/cart-item-type";
 import { GenericResponse } from "@/types/shared/generic-response-type";
 import { cookies, headers } from "next/headers";
 import { prisma } from "../../db/prisma";
-import { FixedRound2, getErrorResponse } from "@/lib/utils";
+import { FixedRound2, getErrorResponse, toNumeric } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { CartType } from "@/types/cart/cart-type";
 
 // Rate limiting storage: Map<ip, { count: number, resetAt: Date }>
-const cartCreationRateLimits = new Map<string, { count: number; resetAt: Date }>();
+const cartCreationRateLimits = new Map<
+  string,
+  { count: number; resetAt: Date }
+>();
 
 // Helper function to check rate limit for cart creation
 async function checkCartCreationRateLimit(ip: string): Promise<boolean> {
@@ -48,18 +51,18 @@ async function checkCartCreationRateLimit(ip: string): Promise<boolean> {
 // Helper function to get client IP
 async function getClientIP(): Promise<string> {
   const headersList = await headers();
-  const forwarded = headersList.get('x-forwarded-for');
-  const realIp = headersList.get('x-real-ip');
-  
+  const forwarded = headersList.get("x-forwarded-for");
+  const realIp = headersList.get("x-real-ip");
+
   if (forwarded) {
-    return forwarded.split(',')[0].trim();
+    return forwarded.split(",")[0].trim();
   }
-  
+
   if (realIp) {
     return realIp;
   }
-  
-  return 'unknown';
+
+  return "unknown";
 }
 
 function CalculateCartPrices(cartItems: CartItemType[]): {
@@ -125,7 +128,7 @@ export async function AddToCartServerAction(
       // Check rate limit before creating new cart
       const clientIP = await getClientIP();
       const isAllowed = await checkCartCreationRateLimit(clientIP);
-      
+
       if (!isAllowed) {
         throw new Error("Too many cart operations. Please try again later.");
       }
@@ -174,7 +177,7 @@ export async function AddToCartServerAction(
     };
 
     revalidatePath(`/products/${cartItem.slug}`);
-    revalidatePath('/cart');
+    revalidatePath("/cart");
 
     return response;
   } catch (error) {
@@ -254,7 +257,9 @@ export async function RemoveFromCartServerAction(
       });
     } else {
       //calculate cart new prices
-      const newCartPrices = CalculateCartPrices(userCart.items as CartItemType[]);
+      const newCartPrices = CalculateCartPrices(
+        userCart.items as CartItemType[]
+      );
       //update the cart in the database
       await prisma.cart.update({
         where: {
@@ -280,7 +285,7 @@ export async function RemoveFromCartServerAction(
     };
 
     revalidatePath(`/products/${cartItemSlug}`);
-    revalidatePath('/cart');
+    revalidatePath("/cart");
 
     return response;
   } catch (error) {
@@ -371,7 +376,7 @@ export async function MigrateSessionCartToUserAction(
 ): Promise<GenericResponse<null>> {
   try {
     const sessionCartId = (await cookies()).get(CART_ID_SESSION)?.value;
-    
+
     if (!sessionCartId) {
       return {
         success: true,
@@ -386,8 +391,8 @@ export async function MigrateSessionCartToUserAction(
     });
 
     await prisma.cart.deleteMany({
-      where: {userId: userId}
-    })
+      where: { userId: userId },
+    });
 
     if (cart) {
       await prisma.cart.update({
@@ -412,7 +417,7 @@ export async function RollbackCartMigrationAction(
   try {
     await prisma.cart.update({
       where: { id: cartId },
-      data: { userId: null, sessionCartId: sessionCartId }
+      data: { userId: null, sessionCartId: sessionCartId },
     });
 
     return {
@@ -424,18 +429,20 @@ export async function RollbackCartMigrationAction(
   }
 }
 
-export async function CleanupOrphanedCartsAction(): Promise<GenericResponse<{ cleanedCarts: number; restoredProducts: number }>> {
+export async function CleanupOrphanedCartsAction(): Promise<
+  GenericResponse<{ cleanedCarts: number; restoredProducts: number }>
+> {
   try {
     // Find orphaned carts: userId is null AND older than 2 hours
     const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
-    
+
     const orphanedCarts = await prisma.cart.findMany({
       where: {
         userId: null,
         createdAt: {
-          lt: twoHoursAgo
-        }
-      }
+          lt: twoHoursAgo,
+        },
+      },
     });
 
     let cleanedCarts = 0;
@@ -444,7 +451,7 @@ export async function CleanupOrphanedCartsAction(): Promise<GenericResponse<{ cl
     // Process each orphaned cart
     for (const cart of orphanedCarts) {
       const cartItems = cart.items as CartItemType[];
-      
+
       // Restore stock for each item in the cart
       for (const item of cartItems) {
         try {
@@ -452,21 +459,24 @@ export async function CleanupOrphanedCartsAction(): Promise<GenericResponse<{ cl
             where: { id: item.productId },
             data: {
               stock: {
-                increment: item.quantity
-              }
-            }
+                increment: item.quantity,
+              },
+            },
           });
           restoredProducts++;
         } catch (error) {
           // Log error but continue with other products
-          console.error(`Failed to restore stock for product ${item.productId}:`, error);
+          console.error(
+            `Failed to restore stock for product ${item.productId}:`,
+            error
+          );
         }
       }
 
       // Delete the orphaned cart
       try {
         await prisma.cart.delete({
-          where: { id: cart.id }
+          where: { id: cart.id },
         });
         cleanedCarts++;
       } catch (error) {
@@ -479,36 +489,19 @@ export async function CleanupOrphanedCartsAction(): Promise<GenericResponse<{ cl
       message: `Cleaned up ${cleanedCarts} orphaned carts and restored ${restoredProducts} products`,
       data: {
         cleanedCarts,
-        restoredProducts
-      }
+        restoredProducts,
+      },
     };
   } catch (error) {
-    return getErrorResponse<{ cleanedCarts: number; restoredProducts: number }>(error);
+    return getErrorResponse<{ cleanedCarts: number; restoredProducts: number }>(
+      error
+    );
   }
 }
 
-function toNumeric(value: unknown): number {
-  if (typeof value === 'number') {
-    return value
-  }
-
-  if (typeof value === 'string') {
-    const parsed = Number(value)
-    return Number.isNaN(parsed) ? 0 : parsed
-  }
-
-  if (value && typeof value === 'object' && 'toNumber' in value && typeof (value as { toNumber: unknown }).toNumber === 'function') {
-    try {
-      return (value as { toNumber: () => number }).toNumber()
-    } catch {
-      return 0
-    }
-  }
-
-  return 0
-}
-
-export async function GetCartAction(): Promise<GenericResponse<CartType | null>> {
+export async function GetCartAction(): Promise<
+  GenericResponse<CartType | null>
+> {
   try {
     //get the cart session id
     const cartSessionId = (await cookies()).get(CART_ID_SESSION)?.value;
