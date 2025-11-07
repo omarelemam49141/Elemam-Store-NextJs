@@ -1,5 +1,5 @@
 import { renderWithProviders } from '@/test-utils/render-with-providers'
-import PaymentMethodsPage from './page'
+import PaymentMethodsPage from '@/app/(root)/payment-methods/page'
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { enCheckoutSteps } from '@/enums/checkout-steps-enum'
@@ -41,7 +41,7 @@ vi.mock('@/components/shared/features/checkout-steps', () => ({
   }
 }))
 
-vi.mock('./payment-methods-form', () => ({
+vi.mock('@/app/(root)/payment-methods/payment-methods-form', () => ({
   __esModule: true,
   default: (props: unknown) => {
     paymentFormSpy(props)

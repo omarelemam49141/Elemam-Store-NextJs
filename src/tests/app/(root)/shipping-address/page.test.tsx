@@ -1,5 +1,5 @@
 import { renderWithProviders } from '@/test-utils/render-with-providers'
-import ShippingAddressPage from './page'
+import ShippingAddressPage from '@/app/(root)/shipping-address/page'
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { enCheckoutSteps } from '@/enums/checkout-steps-enum'
@@ -36,7 +36,7 @@ vi.mock('@/components/shared/features/checkout-steps', () => ({
   }
 }))
 
-vi.mock('./components/shipping-address-form', () => ({
+vi.mock('@/app/(root)/shipping-address/components/shipping-address-form', () => ({
   __esModule: true,
   default: (props: unknown) => {
     shippingFormSpy(props)

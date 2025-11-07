@@ -12,7 +12,7 @@ Validate the product detail route renders server-fetched data and wires the add-
 
 ## Implementation notes
 
-- Tests live in `src/app/(root)/products/[slug]/page.test.tsx`.
+- Tests live in `src/tests/app/(root)/products/[slug]/page.test.tsx`.
 - Server actions (`GetProductBySlugAction`, `GetProductFromCart`) and `notFound` are mocked with `vi.mock`.
 - The `AddToCart` component is shallow-mocked so the test can assert on the props it would receive.
 

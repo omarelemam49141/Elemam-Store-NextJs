@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '@/test-utils/render-with-providers'
-import CartPage from './page'
+import CartPage from '@/app/(root)/cart/page'
 
 const getCartActionMock = vi.fn()
 const cartItemsSpy = vi.fn()
@@ -11,12 +11,12 @@ vi.mock('@/lib/actions/cart/cart-actions', () => ({
   GetCartAction: (...args: unknown[]) => getCartActionMock(...args)
 }))
 
-vi.mock('./components/empty-cart', () => ({
+vi.mock('@/app/(root)/cart/components/empty-cart', () => ({
   __esModule: true,
   default: () => <div data-testid="empty-cart">Your cart is empty</div>
 }))
 
-vi.mock('./components/cart-items', () => ({
+vi.mock('@/app/(root)/cart/components/cart-items', () => ({
   __esModule: true,
   default: (props: unknown) => {
     cartItemsSpy(props)
@@ -24,7 +24,7 @@ vi.mock('./components/cart-items', () => ({
   }
 }))
 
-vi.mock('./components/cart-summary', () => ({
+vi.mock('@/app/(root)/cart/components/cart-summary', () => ({
   __esModule: true,
   default: (props: unknown) => {
     cartSummarySpy(props)
@@ -81,4 +81,3 @@ describe('CartPage', () => {
     expect(screen.getByTestId('cart-summary')).toBeInTheDocument()
   })
 })
-

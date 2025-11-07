@@ -1,18 +1,16 @@
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { GetProduct } from '@/types/products/get-product-type'
 import { renderWithProviders } from '@/test-utils/render-with-providers'
+import Home from '@/app/(root)/page'
+import { GetProductsPaginatedAction } from '@/lib/actions/products/products-actions'
 
 vi.mock('@/lib/actions/products/products-actions', () => ({
   GetProductsPaginatedAction: vi.fn()
 }))
 
-import Home from './page'
-import { GetProductsPaginatedAction } from '@/lib/actions/products/products-actions'
-
 const mockedGetProducts = vi.mocked(GetProductsPaginatedAction)
 
-const baseProduct: GetProduct = {
+const baseProduct = {
   id: '1',
   name: 'Wireless Headphones',
   slug: 'wireless-headphones',

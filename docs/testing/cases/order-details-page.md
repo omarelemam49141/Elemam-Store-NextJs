@@ -12,7 +12,7 @@ Ensure the order detail route renders persisted order information and metadata, 
 
 ## Implementation notes
 
-- Tests live in `src/app/(root)/orders/details/[id]/page.test.tsx`.
+- Tests live in `src/tests/app/(root)/orders/details/[id]/page.test.tsx`.
 - `GetOrderDetailsAction` and `notFound` are mocked; summaries are shallow-mocked to assert their props.
 - `getUuidSuffix` is used inside the page; tests rely on its behaviour indirectly by checking headings and metadata output.
 

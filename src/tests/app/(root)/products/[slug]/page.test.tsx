@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import { describe, beforeEach, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '@/test-utils/render-with-providers'
-import ProductPage, { generateMetadata } from './page'
+import ProductPage, { generateMetadata } from '@/app/(root)/products/[slug]/page'
 
 const productActionMock = vi.fn()
 const productFromCartMock = vi.fn()

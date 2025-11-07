@@ -11,7 +11,7 @@ Validate the final checkout step enforces prerequisites (cart, address, payment 
 
 ## Implementation notes
 
-- Tests are defined in `src/app/(root)/place-order/page.test.tsx`.
+- Tests are defined in `src/tests/app/(root)/place-order/page.test.tsx`.
 - `auth`, `GetCartAction`, Prisma user lookup, and `redirect` are mocked to drive each branch.
 - Summary components are shallow-mocked; assertions focus on the props they receive.
 

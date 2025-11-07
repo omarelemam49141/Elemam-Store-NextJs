@@ -11,7 +11,7 @@ Ensure the cart route toggles between empty and populated layouts based on the s
 
 ## Implementation notes
 
-- Tests reside in `src/app/(root)/cart/page.test.tsx`.
+- Tests reside in `src/tests/app/(root)/cart/page.test.tsx`.
 - `EmptyCart`, `CartItems`, and `CartSummary` are mocked to assert prop forwarding without exercising their internals.
 - `GetCartAction` is mocked with `vi.mock` to supply deterministic responses.
 

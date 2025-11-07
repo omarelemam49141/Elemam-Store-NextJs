@@ -12,7 +12,7 @@ Confirm the payment step enforces authentication, handles error states, and rend
 
 ## Implementation notes
 
-- Tests live in `src/app/(root)/payment-methods/page.test.tsx`.
+- Tests live in `src/tests/app/(root)/payment-methods/page.test.tsx`.
 - `auth`, Prisma user lookup, `redirect`, and the payment-method server action are mocked.
 - UI dependencies (`CheckoutSteps`, `PaymentMethodsForm`) are shallow-mocked so props can be asserted.
 

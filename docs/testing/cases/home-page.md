@@ -11,7 +11,7 @@ Verify that the landing page surfaces the newest arrival products retrieved via 
 
 ## Implementation notes
 
-- Tests reside in `src/app/(root)/page.test.tsx`.
+- Tests reside in `src/tests/app/(root)/page.test.tsx`.
 - `GetProductsPaginatedAction` is mocked via `vi.mock` to provide deterministic data.
 - The async page component is invoked directly (`await Home()`) before rendering with `renderWithProviders`.
 

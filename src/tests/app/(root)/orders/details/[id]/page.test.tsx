@@ -1,5 +1,5 @@
 import { renderWithProviders } from '@/test-utils/render-with-providers'
-import OrderDetailsPage, { generateMetadata } from './page'
+import OrderDetailsPage, { generateMetadata } from '@/app/(root)/orders/details/[id]/page'
 import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getUuidSuffix } from '@/lib/utils'

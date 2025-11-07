@@ -12,7 +12,7 @@ Verify the shipping step enforces authentication and renders the form when prere
 
 ## Implementation notes
 
-- Tests are located at `src/app/(root)/shipping-address/page.test.tsx`.
+- Tests are located at `src/tests/app/(root)/shipping-address/page.test.tsx`.
 - `auth`, Prisma `prisma.user.findFirst`, and `redirect` are mocked to control flow and capture redirect destinations.
 - `CheckoutSteps` and the form component are shallow-mocked so assertions can verify the props they receive.
 
