@@ -21,7 +21,7 @@ function PaymentMethodsForm({paymentMethods, userPaymentMethodId}: {paymentMetho
     if (actionState.message) {
       if (actionState.success) {
         toast.success(actionState.message)
-        redirect("/review-order")
+        redirect("/place-order")
       } else {
         toast.error(actionState.message)
       }

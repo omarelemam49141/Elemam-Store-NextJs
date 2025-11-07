@@ -65,3 +65,12 @@ export function getErrorResponse<T>(error: unknown): GenericResponse<T> {
 
   return response;
 }
+
+export function getSuccessResponse<T>(message: string, data: T | null = null): GenericResponse<T | null> {
+  const response: GenericResponse<T | null> = {
+    success: true,
+    message: message,
+    data: data,
+  };
+  return response;
+}

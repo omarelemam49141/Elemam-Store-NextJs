@@ -104,6 +104,50 @@
   - Consider using libraries like react-hook-form for complex forms.
   - Use Zod or Joi for schema validation.
 
+  Zod Validation Patterns
+  - Use Zod for schema validation with proper syntax:
+    - Use object syntax for validation options: z.string().min(1, { message: 'Error message' })
+    - For UUID validation, use regex instead of deprecated .uuid() method:
+      z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, { message: 'Invalid UUID' })
+    - Avoid deprecated methods like .uuid()
+  - Organize validations in src/validations/ directory with subdirectories per feature
+  - Keep validation schemas separate from TypeScript types
+  - Separate reusable schemas into their own files (e.g., orderItemSchema in order-item-validation.ts)
+  - When a schema is used in multiple places or represents a distinct entity, extract it to its own file
+  - Each validation file should have a corresponding type file in src/types/
+
+  Type Inference and File Structure
+  - Store TypeScript types in src/types/ directory, mirroring the validations folder structure
+  - Create separate type files that infer from validation schemas using z.infer
+  - Never export types directly from validation files
+  - Naming convention: append 'Type' to the inferred type name
+  - Example structure for related schemas:
+    src/validations/order/order-item-validation.ts
+      export const orderItemSchema = z.object({ productId, qty, price })
+    src/validations/order/order-validation.ts
+      import { orderItemSchema } from './order-item-validation'
+      export const insertOrderSchema = z.object({ items: z.array(orderItemSchema), ... })
+    src/types/order/order-item-type.ts
+      import { orderItemSchema } from '@/validations/order/order-item-validation'
+      export type OrderItemType = z.infer<typeof orderItemSchema>
+    src/types/order/insert-order-type.ts
+      import { insertOrderSchema } from '@/validations/order/order-validation'
+      export type InsertOrderType = z.infer<typeof insertOrderSchema>
+
+  Prisma Schema Patterns
+  - Use UUID as primary keys with auto-generation: @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  - Always specify precision for Decimal fields: @db.Decimal(12, 2)
+  - Use appropriate onDelete actions for relations:
+    - Restrict: Prevent deletion if referenced (e.g., PaymentMethod with Orders)
+    - Cascade: Delete related records (e.g., User deletion should cascade to Orders)
+    - NoAction: Database default constraint
+  - Create enums for fixed sets of values (prefix with 'en', e.g., enPaymentMethodType)
+  - Always add reverse relations on both sides of a relationship
+  - Use @db.Timestamp(6) for DateTime fields
+  - Use @db.Json for JSON fields
+  - Run 'npx prisma migrate dev --name descriptive_name' after schema changes
+  - Run 'npx prisma generate' after migrations to update the client
+
   Error Handling and Validation
   - Prioritize error handling and edge cases.
   - Handle errors and edge cases at the beginning of functions.
@@ -149,3 +193,26 @@
     
   GenericResponse
   - Whenever I make a server action, it should return a GenericResponse
+
+  IMPORTANT: Update .cursorrules After Each Conversation
+  - At the end of EVERY conversation, review what was discussed and implemented
+  - If new patterns, preferences, or conventions were established, UPDATE this .cursorrules file immediately
+  - Add specific examples from the conversation to relevant sections
+  - Make rules explicit and actionable so they are followed in future sessions
+  - This is NOT optional - always update .cursorrules with learnings from the conversation
+  - Areas that commonly need updates:
+    - Validation patterns and file structure
+    - Type definitions and naming conventions
+    - Prisma schema patterns (relations, onDelete behavior, field types)
+    - Code organization preferences
+    - Terminal commands and workflows
+    - Any corrections or deprecations discovered
+
+  Prisma Client Conventions
+  - Always import the Prisma client from `src/lib/db/prisma`
+  - The shared client normalizes `Prisma.Decimal` values to numbers through a global query extension
+  - Update `docs/prisma-decimal-handling.md` when the conversion logic changes or when new decimal fields are introduced
+
+  Documentation Updates
+  - Add new infrastructure or data-layer patterns to the `docs/` directory with a dedicated markdown file
+  - Link new documentation entries from `docs/README.md`

@@ -1,21 +1,63 @@
-import { PrismaClient } from "@/generated/prisma";
+import { Prisma, PrismaClient } from '@/generated/prisma';
 
 // Global variable to cache the Prisma client
 declare global {
-  // eslint-disable-next-line no-var
   var __prisma: ReturnType<typeof createPrismaClient> | undefined;
+}
+
+function convertDecimals(value: unknown): unknown {
+  if (value instanceof Prisma.Decimal) {
+    return value.toNumber();
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(convertDecimals);
+  }
+
+  if (!value || typeof value !== 'object') {
+    return value;
+  }
+
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (typeof Buffer !== 'undefined' && value instanceof Buffer) {
+    return value;
+  }
+
+  if (value.constructor !== Object) {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+      key,
+      convertDecimals(entry),
+    ])
+  );
 }
 
 // Create a single instance of Prisma Client for serverless functions
 const createPrismaClient = () => {
   // For Vercel deployment, use the standard Prisma client without Neon adapter
   // The Neon adapter with WebSockets doesn't work well in serverless environments
-  return new PrismaClient({
+  const client = new PrismaClient({
     log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
-  }).$extends({
+      process.env.NODE_ENV === 'development'
+        ? ['query', 'error', 'warn']
+        : ['error'],
+  });
+
+  const extendedClient = client.$extends({
+    query: {
+      $allModels: {
+        $allOperations: async ({ args, query }) => {
+          const result = await query(args);
+          return convertDecimals(result);
+        },
+      },
+    },
     result: {
       product: {
         price: {
@@ -42,6 +84,8 @@ const createPrismaClient = () => {
       },
     },
   });
+
+  return extendedClient;
 };
 
 // Use global variable to cache the Prisma client in development

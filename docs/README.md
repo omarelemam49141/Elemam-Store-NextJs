@@ -6,6 +6,7 @@ This directory contains comprehensive documentation for the Elemam Store applica
 
 ### Core Features
 - [**Cart Cleanup & Rate Limiting System**](./cart-cleanup-system.md) - Comprehensive guide to the orphaned cart cleanup and abuse prevention system
+- [**Prisma Decimal Handling**](./prisma-decimal-handling.md) - Details the global Decimal-to-number conversion middleware
 
 ### Quick Reference
 - [**API Reference**](./api-reference.md) - Quick reference for all API endpoints
