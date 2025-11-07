@@ -212,6 +212,7 @@
   - Always import the Prisma client from `src/lib/db/prisma`
   - The shared client normalizes `Prisma.Decimal` values to numbers through a global query extension
   - When adding result-level accessors (e.g. computed fields) ensure they gracefully handle values already converted to primitives (numbers/strings) in addition to `Prisma.Decimal`
+  - In server actions, treat decimal fields as already-normalised numbers; add narrow guards (like `toNumeric`) instead of calling `.toNumber()` directly
   - Update `docs/prisma-decimal-handling.md` when the conversion logic changes or when new decimal fields are introduced
 
   Documentation Updates

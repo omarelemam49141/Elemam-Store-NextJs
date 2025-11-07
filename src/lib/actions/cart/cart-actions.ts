@@ -487,6 +487,27 @@ export async function CleanupOrphanedCartsAction(): Promise<GenericResponse<{ cl
   }
 }
 
+function toNumeric(value: unknown): number {
+  if (typeof value === 'number') {
+    return value
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number(value)
+    return Number.isNaN(parsed) ? 0 : parsed
+  }
+
+  if (value && typeof value === 'object' && 'toNumber' in value && typeof (value as { toNumber: unknown }).toNumber === 'function') {
+    try {
+      return (value as { toNumber: () => number }).toNumber()
+    } catch {
+      return 0
+    }
+  }
+
+  return 0
+}
+
 export async function GetCartAction(): Promise<GenericResponse<CartType | null>> {
   try {
     //get the cart session id
@@ -514,10 +535,10 @@ export async function GetCartAction(): Promise<GenericResponse<CartType | null>>
       data: {
         ...userCart,
         items: userCart.items as CartItemType[],
-        itemsPrice: userCart.itemsPrice.toNumber(),
-        taxPrice: userCart.taxPrice.toNumber(),
-        shippingPrice: userCart.shippingPrice.toNumber(),
-        totalPrice: userCart.totalPrice.toNumber(),
+        itemsPrice: toNumeric(userCart.itemsPrice),
+        taxPrice: toNumeric(userCart.taxPrice),
+        shippingPrice: toNumeric(userCart.shippingPrice),
+        totalPrice: toNumeric(userCart.totalPrice),
       },
     };
   } catch (error) {

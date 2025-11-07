@@ -65,6 +65,8 @@ Key behaviour:
 - Uses `Decimal#toNumber()` to retain fractional values while returning JS numbers.
 - Result-level helpers (e.g. the `product.price` accessor) now tolerate data that is already a
   number or string, so repeated conversions and SSR serialisation do not throw.
+- Server actions working with cart totals should treat monetary values as already-normalised
+  numbers; use lightweight guards (for example, `toNumeric`) instead of calling `.toNumber()` directly.
 
 ## Usage Notes
 
