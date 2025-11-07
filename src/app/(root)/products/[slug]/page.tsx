@@ -12,9 +12,9 @@ import { APP_NAME } from '@/lib/constants'
 const ProductDetails = async ({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) => {
-  const { slug } = params
+  const { slug } = await params
   const productDetails = await GetProductBySlugAction(slug)
   if (!productDetails) {
     notFound()
@@ -101,8 +101,8 @@ const ProductDetails = async ({
 
 export default ProductDetails
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const { slug } = params
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
   const product = await GetProductBySlugAction(slug)
 
   if (!product) {

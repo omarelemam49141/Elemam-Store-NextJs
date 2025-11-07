@@ -68,7 +68,7 @@ describe('Product details page', () => {
     productActionMock.mockResolvedValueOnce(baseProduct)
     productFromCartMock.mockResolvedValueOnce(cartItem)
 
-    const Page = await ProductPage({ params: { slug: baseProduct.slug } })
+    const Page = await ProductPage({ params: Promise.resolve({ slug: baseProduct.slug }) })
     renderWithProviders(Page)
 
     expect(productActionMock).toHaveBeenCalledWith(baseProduct.slug)
@@ -88,7 +88,7 @@ describe('Product details page', () => {
   it('invokes notFound when the product does not exist', async () => {
     productActionMock.mockResolvedValueOnce(null)
 
-    await expect(ProductPage({ params: { slug: 'missing-product' } })).rejects.toThrow('NOT_FOUND')
+    await expect(ProductPage({ params: Promise.resolve({ slug: 'missing-product' }) })).rejects.toThrow('NOT_FOUND')
     expect(notFoundMock).toHaveBeenCalled()
     expect(productFromCartMock).not.toHaveBeenCalled()
   })
@@ -96,7 +96,7 @@ describe('Product details page', () => {
   it('generates metadata for existing products', async () => {
     productActionMock.mockResolvedValueOnce(baseProduct)
 
-    const metadata = await generateMetadata({ params: { slug: baseProduct.slug } })
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug: baseProduct.slug }) })
 
     expect(metadata.title).toBe(`${baseProduct.name} | ${baseProduct.brand}`)
     expect(metadata.alternates?.canonical).toBe(`/products/${baseProduct.slug}`)
@@ -106,10 +106,9 @@ describe('Product details page', () => {
   it('generates not-found metadata for missing products', async () => {
     productActionMock.mockResolvedValueOnce(null)
 
-    const metadata = await generateMetadata({ params: { slug: 'missing-product' } })
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug: 'missing-product' }) })
 
     expect(metadata.title).toBe('Product Not Found')
     expect(metadata.robots).toEqual({ index: false, follow: false })
   })
 })
-

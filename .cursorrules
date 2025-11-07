@@ -194,6 +194,7 @@
 
   Terminal commands
   - When I ask you to run the seed file, use this command npx tsx ./src/lib/db/seed.ts (the path to the seed.ts file may change so make sure it is correct), only only do this, don't do anything else!
+  - When I say "c & p" it means stage, commit, and push the current work with an appropriate message
     
   GenericResponse
   - Whenever I make a server action, it should return a GenericResponse
