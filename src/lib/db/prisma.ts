@@ -63,8 +63,24 @@ const createPrismaClient = () => {
         price: {
           needs: { price: true },
           compute(product) {
-            // Convert Decimal to number
-            return product.price?.toNumber();
+            if (product.price === null || product.price === undefined) {
+              return product.price
+            }
+
+            if (product.price instanceof Prisma.Decimal) {
+              return product.price.toNumber()
+            }
+
+            if (typeof product.price === 'number') {
+              return product.price
+            }
+
+            if (typeof product.price === 'string') {
+              const parsed = Number(product.price)
+              return Number.isNaN(parsed) ? product.price : parsed
+            }
+
+            return product.price
           },
         },
         rating: {

@@ -63,6 +63,8 @@ Key behaviour:
 - Recursively visits arrays and plain objects.
 - Preserves `Date`, `Buffer`, and non-plain objects to avoid altering non-decimal payloads.
 - Uses `Decimal#toNumber()` to retain fractional values while returning JS numbers.
+- Result-level helpers (e.g. the `product.price` accessor) now tolerate data that is already a
+  number or string, so repeated conversions and SSR serialisation do not throw.
 
 ## Usage Notes
 
