@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import ThemeToggler from "../theme-toggler";
 import Link from "next/link";
-import { BaggageClaim, User, EllipsisVerticalIcon } from "lucide-react";
+import { BaggageClaim, EllipsisVerticalIcon } from "lucide-react";
 import {
   Sheet,
   SheetClose,

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import CartItemsSummary from "@/components/shared/features/order/cart-items-summary";
 import OrderSummary from "@/components/shared/features/order/order-summary";
 import PaymentMethodSummary from "@/components/shared/features/order/payment-method-summary";
@@ -5,6 +6,7 @@ import ShippingAddressSummary from "@/components/shared/features/order/shipping-
 import { User } from "@/generated/prisma";
 import { GetOrderDetailsAction } from "@/lib/actions/orders/orders-actions";
 import { getUuidSuffix, toNumeric } from "@/lib/utils";
+import { APP_NAME } from "@/lib/constants";
 import { CartItemType } from "@/types/cart/cart-item-type";
 import { CartType } from "@/types/cart/cart-type";
 import { PaymentMethodType } from "@/types/payment-methods/payment-method-type";
@@ -61,4 +63,31 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ i
     </div>
   </>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const orderDetailsResponse = await GetOrderDetailsAction(id);
+
+  const orderId = orderDetailsResponse.success && orderDetailsResponse.data?.id
+    ? orderDetailsResponse.data.id
+    : id;
+  const orderSuffix = getUuidSuffix(orderId ?? "");
+  const description = orderDetailsResponse.success && orderDetailsResponse.data
+    ? `Review the items, totals, and delivery status for order ${orderSuffix}.`
+    : `Review order information for reference ${orderSuffix}.`;
+
+  return {
+    title: `Order ${orderSuffix}`,
+    description,
+    alternates: {
+      canonical: `/orders/details/${id}`,
+    },
+    openGraph: {
+      title: `${APP_NAME} | Order ${orderSuffix}`,
+      description,
+      url: `/orders/details/${id}`,
+      type: "article",
+    },
+  };
 }

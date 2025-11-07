@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { auth } from "@/auth";
 import CheckoutSteps from "@/components/shared/features/checkout-steps";
 import CartItemsSummary from "@/components/shared/features/order/cart-items-summary";
@@ -12,6 +13,21 @@ import { CartType } from "@/types/cart/cart-type";
 import { PaymentMethodType } from "@/types/payment-methods/payment-method-type";
 import { ShippingAddressType } from "@/types/user/shipping-address-type";
 import { redirect } from "next/navigation";
+import { APP_NAME } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: "Review & Place Order",
+  description: "Confirm your shipping, payment, and order details before submitting your purchase securely.",
+  alternates: {
+    canonical: "/place-order",
+  },
+  openGraph: {
+    title: `${APP_NAME} | Review & Place Order`,
+    description: "Double-check your cart totals and details before placing your order.",
+    url: "/place-order",
+    type: "website",
+  },
+};
 
 export default async function PlaceOrderPage() {
   const session = await auth();
@@ -21,11 +37,11 @@ export default async function PlaceOrderPage() {
   }
 
   const cartResponse = await GetCartAction();
-  let cart = null;
+  let cart: CartType | null = null;
   if (!cartResponse.success) {
     redirect("/cart");
   } else {
-    cart = cartResponse.data;
+    cart = cartResponse.data ?? null;
   }
 
   const user = await prisma.user.findFirst({

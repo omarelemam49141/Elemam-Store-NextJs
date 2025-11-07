@@ -1,23 +1,25 @@
-import ProductPrice from "@/components/features/products/product-details/product-price";
-import { Card, CardContent } from "@/components/ui/card";
-import { GetProductBySlugAction } from "@/lib/actions/products/products-actions";
-import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
-import ProductImages from "@/components/features/products/product-details/product-images";
-import AddToCart from "@/components/features/cart/add-to-cart-btn";
-import { GetProductFromCart } from "@/lib/actions/cart/cart-actions";
+import type { Metadata } from 'next'
+import ProductPrice from '@/components/features/products/product-details/product-price'
+import { Card, CardContent } from '@/components/ui/card'
+import { GetProductBySlugAction } from '@/lib/actions/products/products-actions'
+import { notFound } from 'next/navigation'
+import { Badge } from '@/components/ui/badge'
+import ProductImages from '@/components/features/products/product-details/product-images'
+import AddToCart from '@/components/features/cart/add-to-cart-btn'
+import { GetProductFromCart } from '@/lib/actions/cart/cart-actions'
+import { APP_NAME } from '@/lib/constants'
 
 const ProductDetails = async ({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string }
 }) => {
-  const { slug } = await params;
-  const productDetails = await GetProductBySlugAction(slug);
+  const { slug } = params
+  const productDetails = await GetProductBySlugAction(slug)
   if (!productDetails) {
-    notFound();
+    notFound()
   }
-  const productFromCart = await GetProductFromCart(productDetails.id);
+  const productFromCart = await GetProductFromCart(productDetails.id)
 
   return (
     <>
@@ -94,7 +96,48 @@ const ProductDetails = async ({
         {/* end add to cart */}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ProductDetails;
+export default ProductDetails
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const { slug } = params
+  const product = await GetProductBySlugAction(slug)
+
+  if (!product) {
+    return {
+      title: 'Product Not Found',
+      description: 'The requested product could not be located. Please explore other items instead.',
+      alternates: {
+        canonical: `/products/${slug}`,
+      },
+      robots: {
+        index: false,
+        follow: false,
+      },
+    }
+  }
+
+  const description = product.description?.length > 160
+    ? `${product.description.slice(0, 157)}...`
+    : product.description
+  const images = product.images?.length
+    ? product.images.map((imageUrl) => ({ url: imageUrl }))
+    : undefined
+
+  return {
+    title: `${product.name} | ${product.brand}`,
+    description,
+    alternates: {
+      canonical: `/products/${product.slug}`,
+    },
+    openGraph: {
+      title: `${APP_NAME} | ${product.name}`,
+      description,
+      url: `/products/${product.slug}`,
+      type: 'website',
+      images,
+    },
+  }
+}

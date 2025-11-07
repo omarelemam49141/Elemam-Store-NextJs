@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { CHECKOUT_STEPS, enCheckoutSteps } from "@/enums/checkout-steps-enum";
 import React from "react";
 

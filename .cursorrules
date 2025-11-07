@@ -7,6 +7,7 @@
   - Prefer iteration and modularization over code duplication.
   - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
   - Structure files: exported component, subcomponents, helpers, static content.
+  - For routes in `src/app/(root)`, ensure each page exports `metadata` or `generateMetadata` with descriptive titles, canonical URLs, and Open Graph fields.
 
   Standard.js Rules
   - Use 2 space indentation.
@@ -97,6 +98,7 @@
   - Implement route-based code splitting in Next.js.
   - Minimize the use of global styles; prefer modular, scoped styles.
   - Use PurgeCSS with Tailwind to remove unused styles in production.
+  - Use the shared `LoadingState` component for route-level `loading.tsx` fallbacks to provide consistent navigation feedback.
 
   Forms and Validation
   - Use controlled components for form inputs.
@@ -164,9 +166,11 @@
   - Ensure keyboard navigation support.
 
   Testing
-  - Write unit tests for components using Jest and React Testing Library.
-  - Implement integration tests for critical user flows.
-  - Use snapshot testing judiciously.
+  - Use Vitest with React Testing Library for unit and integration tests; place specs alongside source with the `.test.tsx` suffix.
+  - Prefer `renderWithProviders` from `src/test-utils/render-with-providers` to keep provider context consistent.
+  - Mock Next.js server actions with `vi.mock` and document complex cases under `docs/testing/cases/`.
+  - Add page-level tests for App Router routes by awaiting the async page function, mocking `redirect`/`notFound`, and asserting rendered summaries.
+  - Run `npm test` (coverage) or `npm run test:watch` during development; keep coverage thresholds at or above the configured baseline.
 
   Security
   - Sanitize user inputs to prevent XSS attacks.
@@ -218,3 +222,5 @@
   Documentation Updates
   - Add new infrastructure or data-layer patterns to the `docs/` directory with a dedicated markdown file
   - Link new documentation entries from `docs/README.md`
+  - For new test suites, update `docs/testing/testing-strategy.md` and create scenario notes inside `docs/testing/cases/`
+  - Document quality guidance (performance, SEO, security) in `docs/quality/` whenever audits evolve

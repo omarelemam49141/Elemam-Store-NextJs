@@ -3,9 +3,20 @@ import EmptyCart from "./components/empty-cart";
 import CartItems from "./components/cart-items";
 import { Metadata } from "next";
 import CartSummary from "./components/cart-summary";
+import { APP_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Shopping Cart",
+  description: "Review the products in your shopping cart, update quantities, or proceed to checkout when you're ready.",
+  alternates: {
+    canonical: "/cart",
+  },
+  openGraph: {
+    title: `${APP_NAME} | Shopping Cart`,
+    description: "Keep track of the items you've added, adjust your cart, and move forward to shipping and payment.",
+    url: "/cart",
+    type: "website",
+  },
 };
 
 const CartPage = async () => {
